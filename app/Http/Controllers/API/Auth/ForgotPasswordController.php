@@ -62,7 +62,6 @@ class ForgotPasswordController extends Controller
     protected function validateEmail(Request $request)
     {
         $request->validate(['email' => 'required|email']);
-//        $guardName = 'agency';
         if ($user = Auth::guard($this->guard_scope)->getProvider()->retrieveByCredentials(['email' => $request->email])) {
             $request->merge(['user_id' => $user->id]);
         } else {

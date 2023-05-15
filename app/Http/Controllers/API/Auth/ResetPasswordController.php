@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use App\ApiCode;
+use App\Http\Requests\ResetPasswordRequest;
 
 class ResetPasswordController extends Controller
 {
@@ -57,9 +58,8 @@ class ResetPasswordController extends Controller
     }
 
 
-    public function reset(Request $request)
+    public function reset(ResetPasswordRequest $request)
     {
-        $validate = $request->validate($this->rules(), $this->validationErrorMessages());
         $resetter = $this->getGuardResetterTable($this->guard_scope);
         $response = Password::broker($resetter)->reset($request->only('email', 'password', 'password_confirmation', 'token'), function ($user, $password) {
             $user->password = Hash::make($password);

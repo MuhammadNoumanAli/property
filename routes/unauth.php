@@ -20,8 +20,3 @@ use App\Http\Controllers\API\Auth\ResetPasswordController;
 Route::post('/login', [LoginController::class, 'loginUser']);
 Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('/password/reset', [ResetPasswordController::class, 'reset']);
-
-
-//Route::post('agency/forgot-password', 'App\Http\Controllers\AgencyAuth\ForgotPasswordController@sendResetLinkEmail')->name('agency.password.email');
-//Route::post('admin/forgot-password', 'App\Http\Controllers\AdminAuth\ForgotPasswordController@sendResetLinkEmail')->name('admin.password.email');
-//Route::post('superadmin/forgot-password', 'App\Http\Controllers\SuperAdminAuth\ForgotPasswordController@sendResetLinkEmail')->name('superadmin.password.email');

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\RegisterRequest;
 
 class LoginController extends Controller
 {
@@ -54,7 +55,7 @@ class LoginController extends Controller
         }
     }
 
-    public function registerAdminOrAgency(Request $request): Response
+    public function registerAdminOrAgency(RegisterRequest $request): Response
     {
         $input = $request->all();
         $validator = Validator::make($input, [
