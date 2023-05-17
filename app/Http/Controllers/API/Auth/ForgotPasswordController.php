@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\Auth;
 
-use App\ApiCode;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;

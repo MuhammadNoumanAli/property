@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Models\Admin;
 use App\Models\Agency;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -25,22 +26,21 @@ class LoginController extends Controller
     }
 
 
-    public function loginUser(LoginRequest $request)
+    public function loginUser(LoginRequest $request): Response
     {
         $input = $request->all();
-
         $credentials = ['email' => $input['email'], 'password' => $input['password']];
         if(Auth::guard($this->guard_scope)->attempt($credentials)){
             $user = Auth::guard($this->guard_scope)->user();
             $token = $user->createToken('SuperadminToken', [$this->guard_scope])->accessToken;
-            $this->respondSuccessWithDataAndMessage($token, 'token');
+            return $this->respondSuccessWithDataAndMessage($token, 'token');
         }
         else{
-            $this->respondUnAuthorizedWithMessage('Email or password incorrect');
+            return $this->respondUnAuthorizedWithMessage('Email or password incorrect');
         }
     }
 
-    public function registerAdminOrAgency(RegisterRequest $request)
+    public function registerAdminOrAgency(RegisterRequest $request): Response
     {
         $input = $request->all();
         if($input['user_type'] == 'admin'){
@@ -52,7 +52,7 @@ class LoginController extends Controller
         }
 
         if ($get_details) {
-            $this->respondWithError('User Already Exist');
+            return $this->respondWithError('User Already Exist');
         }
 
         $user->name = $input['name'];
@@ -61,30 +61,31 @@ class LoginController extends Controller
         $user->save();
 
         if($user){
-            $this->respondSuccessWithMessage('User Created Successfully.');
+            return $this->respondSuccessWithMessage('User Created Successfully.');
         }
         else{
-            $this->respondUnAuthorizedWithMessage('User Not Created.');
+            return $this->respondUnAuthorizedWithMessage('User Not Created.');
         }
     }
 
 
 
 
-    public function userDetails()
+    public function userDetails(): Response
     {
         $user = Auth::user();
         if($user){
-            $this->respondSuccessWithDataAndMessage($user, 'data');
+            return $this->respondSuccessWithDataAndMessage($user, 'data');
         }else{
-            $this->respondNotFoundWithMessage('Record Not Found');
+            return $this->respondNotFoundWithMessage('Record Not Found');
         }
     }
 
 
-    public function logoutUser()
+    public function logoutUser(): Response
     {
         $accessToken = Auth::user()->token();
+
         if($accessToken){
             DB::table('oauth_refresh_tokens')
                 ->where('access_token_id', $accessToken->id)
@@ -92,9 +93,9 @@ class LoginController extends Controller
                     'revoked' => true
                 ]);
             $accessToken->revoke();
-            $this->respondSuccessWithMessage('Logout Successfully');
+            return $this->respondSuccessWithMessage('Logout Successfully');
         }else{
-            $this->respondUnAuthorizedWithMessage('UnAuthorized');
+            return $this->respondUnAuthorizedWithMessage('UnAuthorized');
         }
     }
 
