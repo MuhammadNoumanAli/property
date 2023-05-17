@@ -4,13 +4,9 @@ namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use App\Models\Admin;
-use App\Models\Agency;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\RegisterRequest;
 
 class LoginController extends Controller
 {
@@ -39,36 +35,6 @@ class LoginController extends Controller
             return $this->respondUnAuthorizedWithMessage('Email or password incorrect');
         }
     }
-
-    public function registerAdminOrAgency(RegisterRequest $request): Response
-    {
-        $input = $request->all();
-        if($input['user_type'] == 'admin'){
-            $get_details = Admin::where('email', $request->email)->first();
-            $user = new Admin();
-        }else if($input['user_type'] == 'agency'){
-            $get_details = Agency::where('email', $request->email)->first();
-            $user = new Agency();
-        }
-
-        if ($get_details) {
-            return $this->respondWithError('User Already Exist');
-        }
-
-        $user->name = $input['name'];
-        $user->email = $input['email'];
-        $user->password = Hash::make($input['password']);
-        $user->save();
-
-        if($user){
-            return $this->respondSuccessWithMessage('User Created Successfully.');
-        }
-        else{
-            return $this->respondUnAuthorizedWithMessage('User Not Created.');
-        }
-    }
-
-
 
 
     public function userDetails(): Response

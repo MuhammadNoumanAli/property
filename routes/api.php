@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\LoginController;
-
+use App\Http\Controllers\API\Auth\RegisterController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,7 +20,7 @@ use App\Http\Controllers\API\Auth\LoginController;
 //});
 
 
-Route::post('/register', [LoginController::class, 'registerAdminOrAgency']);
+Route::post('/register', [RegisterController::class, 'registerAdminOrAgency']);
 Route::get('/user-details', [LoginController::class, 'userDetails'])->name('api.user.details');
 Route::get('/logout', [LoginController::class, 'logoutUser']);
 
