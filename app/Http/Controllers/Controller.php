@@ -66,11 +66,11 @@ class Controller extends BaseController
         return response($success, ApiCode::SUCCESS_STATUS);
     }
 
-    public function respondBadRequest($api_code) {
-        return $this->respondWithError($api_code, 400);
-    }
-
-    public function respondNotFound($api_code) {
-        return $this->respondWithError($api_code, 404);
-    }
+//    public function respondBadRequest($api_code) {
+//        return $this->respondWithError($api_code, 400);
+//    }
+//
+//    public function respondNotFound($api_code) {
+//        return $this->respondWithError($api_code, 404);
+//    }
 }
