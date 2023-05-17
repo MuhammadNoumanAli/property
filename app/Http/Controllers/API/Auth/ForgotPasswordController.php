@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Http\Response;
+
 class ForgotPasswordController extends Controller
 {
 
@@ -44,7 +46,7 @@ class ForgotPasswordController extends Controller
         return Auth::guard('api');
     }
 
-    public function sendResetLinkEmail(Request $request)
+    public function sendResetLinkEmail(Request $request): Response
     {
         $validate = $this->validateEmail($request);
         $resetter = $this->getGuardResetterTable($this->guard_scope);
@@ -52,10 +54,9 @@ class ForgotPasswordController extends Controller
         $response = $broker->sendResetLink($request->only('email'));
 
         if ($response === Password::RESET_LINK_SENT) {
-
-            $success['success'] = ApiCode::SUCCESS_TRUE;
-            $success['message'] = 'Password reset link sent successfully';
-            return response($success, ApiCode::SUCCESS_STATUS);
+            return $this->respondSuccessWithMessage('Password reset link sent successfully');
+        }else{
+            return $this->respondErrorWithMessage('Password reset link not sent');
         }
     }
 
@@ -65,9 +66,7 @@ class ForgotPasswordController extends Controller
         if ($user = Auth::guard($this->guard_scope)->getProvider()->retrieveByCredentials(['email' => $request->email])) {
             $request->merge(['user_id' => $user->id]);
         } else {
-            $success['success'] = ApiCode::SUCCESS_TRUE;
-            $success['message'] = 'User with email address not found.';
-            return response($success, ApiCode::EMAIL_NOT_FOUND);
+            return $this->respondNotFoundWithMessage('User with email address not found.');
         }
     }
 

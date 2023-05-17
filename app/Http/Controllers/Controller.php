@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\ApiCode;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -19,5 +21,56 @@ class Controller extends BaseController
         }elseif ($params == 'superadmin'){
             return 'superadmins';
         }
+    }
+
+
+    public function respondSuccessWithDataAndMessage($data, $array_parameter = null, $msg = null): Response
+    {
+        $success['success'] = ApiCode::SUCCESS_TRUE;
+        $success[$array_parameter] = $data;
+        return response($success, ApiCode::SUCCESS_STATUS);
+    }
+
+    public function respondSuccessWithMessage($msg): Response
+    {
+        $success['success'] = ApiCode::SUCCESS_TRUE;
+        $success['message'] = $msg;
+        return response($success, ApiCode::SUCCESS_STATUS);
+    }
+
+    public function respondErrorWithMessage($msg): Response
+    {
+        $success['success'] = ApiCode::SUCCESS_FALSE;
+        $success['message'] = $msg;
+        return response($success, ApiCode::SUCCESS_STATUS);
+    }
+
+    public function respondNotFoundWithMessage($msg): Response
+    {
+        $success['success'] = ApiCode::SUCCESS_FALSE;
+        $success['message'] = $msg;
+        return response($success, ApiCode::NOT_FOUND);
+    }
+
+    public function respondUnAuthorizedWithMessage($msg): Response
+    {
+        $success['success'] = ApiCode::SUCCESS_FALSE;
+        $success['message'] = $msg;
+        return response($success, ApiCode::UNAUTHENTICATED_STATUS);
+    }
+
+    public function respondWithError($msg): Response
+    {
+        $success['success'] = ApiCode::SUCCESS_FALSE;
+        $success['message'] = $msg;
+        return response($success, ApiCode::SUCCESS_STATUS);
+    }
+
+    public function respondBadRequest($api_code) {
+        return $this->respondWithError($api_code, 400);
+    }
+
+    public function respondNotFound($api_code) {
+        return $this->respondWithError($api_code, 404);
     }
 }
