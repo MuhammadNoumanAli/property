@@ -84,13 +84,7 @@ class SuperadminController extends Controller
     {
         $agency->name = $request->name;
         $agency->password = Hash::make($request->password);
-        $result = $agency->save();
-        if($result){
-            return $this->respondSuccessWithMessage(ApiCode::DATA_UPDATED_SUCCESS);
-        }else{
-            return $this->respondUnAuthorizedWithMessage(ApiCode::DATA_NOT_UPDATED);
-        }
-//        $agency->update($request->validated());
+        return $this->updateDataSuccessOrNot($agency->save());
     }
 
     /**
@@ -100,12 +94,7 @@ class SuperadminController extends Controller
     {
         $admin->name = $request->name;
         $admin->password = Hash::make($request->password);
-        $result = $admin->save();
-        if($result){
-            return $this->respondSuccessWithMessage(ApiCode::DATA_UPDATED_SUCCESS);
-        }else{
-            return $this->respondUnAuthorizedWithMessage(ApiCode::DATA_NOT_UPDATED);
-        }
+        return $this->updateDataSuccessOrNot($admin->save());
     }
 
     /**
@@ -113,12 +102,7 @@ class SuperadminController extends Controller
      */
     public function destroyAgency(Agency $agency): Response
     {
-        $result = $agency->delete();
-        if($result){
-            return $this->respondSuccessWithMessage(ApiCode::DATA_DELETED_SUCCESS);
-        }else{
-            return $this->respondUnAuthorizedWithMessage(ApiCode::DATA_NOT_DELETE);
-        }
+        return $this->deleteDataSuccessOrNot($agency->delete());
     }
 
 
@@ -127,11 +111,6 @@ class SuperadminController extends Controller
      */
     public function destroyAdmin(Admin $admin): Response
     {
-        $result = $admin->delete();
-        if($result){
-            return $this->respondSuccessWithMessage(ApiCode::DATA_DELETED_SUCCESS);
-        }else{
-            return $this->respondUnAuthorizedWithMessage(ApiCode::DATA_NOT_DELETE);
-        }
+        return $this->deleteDataSuccessOrNot($admin->delete());
     }
 }

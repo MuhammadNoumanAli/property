@@ -66,6 +66,26 @@ class Controller extends BaseController
         return response($success, ApiCode::SUCCESS_STATUS);
     }
 
+    public function updateDataSuccessOrNot($response): Response
+    {
+        if($response){
+            return $this->respondSuccessWithMessage(ApiCode::DATA_UPDATED_SUCCESS);
+        }else{
+            return $this->respondUnAuthorizedWithMessage(ApiCode::DATA_NOT_UPDATED);
+        }
+    }
+
+    public function deleteDataSuccessOrNot($response): Response
+    {
+        if($response){
+            return $this->respondSuccessWithMessage(ApiCode::DATA_DELETED_SUCCESS);
+        }else{
+            return $this->respondUnAuthorizedWithMessage(ApiCode::DATA_NOT_DELETE);
+        }
+    }
+
+
+
 //    public function respondBadRequest($api_code) {
 //        return $this->respondWithError($api_code, 400);
 //    }
