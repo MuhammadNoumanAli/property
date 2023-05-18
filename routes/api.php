@@ -25,40 +25,45 @@ Route::post('/register', [RegisterController::class, 'registerAdminOrAgency']);
 Route::get('/user-details', [LoginController::class, 'userDetails'])->name('api.user.details');
 Route::get('/logout', [LoginController::class, 'logoutUser']);
 
-/*
-|--------------------------------------------------------------------------
-| Super Admin [Agencies] Routes
-|--------------------------------------------------------------------------
-|
-*/
-
-Route::get('/agencies', [SuperadminController::class, 'indexAgency'])->name('agency.index');
-Route::get('/agencies/{agency}', [SuperadminController::class, 'showAgency'])->name('agency.show');
-Route::get('/agencies/{agency}/edit', [SuperadminController::class, 'editAgency'])->name('agency.edit');
-Route::patch('/agencies/{agency}', [SuperadminController::class, 'updateAgency'])->name('agency.update');
-Route::delete('/agencies/{agency}', [SuperadminController::class, 'destroyAgency'])->name('agency.destroy');
 
 
 
+Route::middleware(['auth:superadmin-api'])->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | Super Admin [Agencies] Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+
+    Route::get('/agencies', [SuperadminController::class, 'indexAgency'])->name('agency.index');
+    Route::get('/agencies/{agency}', [SuperadminController::class, 'showAgency'])->name('agency.show');
+    Route::get('/agencies/{agency}/edit', [SuperadminController::class, 'editAgency'])->name('agency.edit');
+    Route::patch('/agencies/{agency}', [SuperadminController::class, 'updateAgency'])->name('agency.update');
+    Route::delete('/agencies/{agency}', [SuperadminController::class, 'destroyAgency'])->name('agency.destroy');
 
 
 
 
-/*
-|--------------------------------------------------------------------------
-| Super Admin [Admins] Routes
-|--------------------------------------------------------------------------
-|
-*/
-
-Route::get('/admins', [SuperadminController::class, 'indexAdmin'])->name('admins.index');
-Route::get('/admins/{admin}', [SuperadminController::class, 'showAdmin'])->name('admins.show');
-Route::get('/admins/{admin}/edit', [SuperadminController::class, 'editAdmin'])->name('admins.edit');
-Route::patch('/admins/{admin}', [SuperadminController::class, 'updateAdmin'])->name('admins.update');
-Route::delete('/admins/{admin}', [SuperadminController::class, 'destroyAdmin'])->name('admins.destroy');
 
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | Super Admin [Admins] Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    Route::get('/admins', [SuperadminController::class, 'indexAdmin'])->name('admins.index');
+    Route::get('/admins/{admin}', [SuperadminController::class, 'showAdmin'])->name('admins.show');
+    Route::get('/admins/{admin}/edit', [SuperadminController::class, 'editAdmin'])->name('admins.edit');
+    Route::patch('/admins/{admin}', [SuperadminController::class, 'updateAdmin'])->name('admins.update');
+    Route::delete('/admins/{admin}', [SuperadminController::class, 'destroyAdmin'])->name('admins.destroy');
+
+
+});
 
 
 

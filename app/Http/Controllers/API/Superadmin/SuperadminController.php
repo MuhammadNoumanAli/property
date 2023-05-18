@@ -2,15 +2,27 @@
 
 namespace App\Http\Controllers\API\Superadmin;
 
+use App\ApiCode;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Superadmin\AdminAgencyUpdateRequest;
 use App\Models\Admin;
 use App\Models\Agency;
-use App\Models\Superadmin;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class SuperadminController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:superadmin-api');
+    }
+
+
     /**
      * Display a listing of the resource.
      */
@@ -29,13 +41,6 @@ class SuperadminController extends Controller
         return $this->respondSuccessWithDataAndMessage($admins, 'data');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): Response
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -54,19 +59,79 @@ class SuperadminController extends Controller
         return $this->respondSuccessWithDataAndMessage($admin, 'data');
     }
 
+
+    /**
+     * Display the specified resource.
+     */
+    public function editAgency(Agency $agency): Response
+    {
+        return $this->respondSuccessWithDataAndMessage($agency, 'data');
+    }
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function editAdmin(Admin $admin): Response
+    {
+        return $this->respondSuccessWithDataAndMessage($admin, 'data');
+    }
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Superadmin $superadmin): Response
+    public function updateAgency(AdminAgencyUpdateRequest $request, Agency $agency): Response
     {
-        //
+        $agency->name = $request->name;
+        $agency->password = Hash::make($request->password);
+        $result = $agency->save();
+        if($result){
+            return $this->respondSuccessWithMessage(ApiCode::DATA_UPDATED_SUCCESS);
+        }else{
+            return $this->respondUnAuthorizedWithMessage(ApiCode::DATA_NOT_UPDATED);
+        }
+//        $agency->update($request->validated());
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updateAdmin(AdminAgencyUpdateRequest $request, Admin $admin): Response
+    {
+        $admin->name = $request->name;
+        $admin->password = Hash::make($request->password);
+        $result = $admin->save();
+        if($result){
+            return $this->respondSuccessWithMessage(ApiCode::DATA_UPDATED_SUCCESS);
+        }else{
+            return $this->respondUnAuthorizedWithMessage(ApiCode::DATA_NOT_UPDATED);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Superadmin $superadmin): Response
+    public function destroyAgency(Agency $agency): Response
     {
-        //
+        $result = $agency->delete();
+        if($result){
+            return $this->respondSuccessWithMessage(ApiCode::DATA_DELETED_SUCCESS);
+        }else{
+            return $this->respondUnAuthorizedWithMessage(ApiCode::DATA_NOT_DELETE);
+        }
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroyAdmin(Admin $admin): Response
+    {
+        $result = $admin->delete();
+        if($result){
+            return $this->respondSuccessWithMessage(ApiCode::DATA_DELETED_SUCCESS);
+        }else{
+            return $this->respondUnAuthorizedWithMessage(ApiCode::DATA_NOT_DELETE);
+        }
     }
 }

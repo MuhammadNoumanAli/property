@@ -17,4 +17,11 @@ class ApiCode {
     public const REQUEST_AREA_FORBIDDEN = 403;
     public const NOT_FOUND = 404;
     public const GENERAL_SERVER_ERROR = 500;
+
+    public const DATA_UPDATED_SUCCESS   = 'Data Updated Successfully';
+    public const DATA_NOT_UPDATED       = 'Data Not Update';
+    public const DATA_DELETED_SUCCESS   = 'Data Deleted Successfully';
+    public const DATA_NOT_DELETE        = 'Data Not Delete';
+    public const ACCESS_UNAUTHORIZED    = 'UnAuthorized';
+
 }
