@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Auth;
 
+use App\ApiCode;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
@@ -53,9 +54,9 @@ class ForgotPasswordController extends Controller
         $response = $broker->sendResetLink($request->only('email'));
 
         if ($response === Password::RESET_LINK_SENT) {
-            return $this->respondSuccessWithMessage('Password reset link sent successfully');
+            return $this->respondSuccessWithDataAndMessage(null, '', 'Password reset link sent successfully');
         }else{
-            return $this->respondErrorWithMessage('Password reset link not sent');
+            return $this->respondErrorWithMessage('Password reset link not sent', ApiCode::BAD_REQUEST);
         }
     }
 
@@ -65,7 +66,7 @@ class ForgotPasswordController extends Controller
         if ($user = Auth::guard($this->guard_scope)->getProvider()->retrieveByCredentials(['email' => $request->email])) {
             $request->merge(['user_id' => $user->id]);
         } else {
-            return $this->respondNotFoundWithMessage('User with email address not found.');
+            return $this->respondErrorWithMessage('User with email address not found.', ApiCode::NOT_FOUND);
         }
     }
 

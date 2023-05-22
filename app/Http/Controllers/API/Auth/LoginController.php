@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\API\Auth;
 
+use App\ApiCode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Laravel\Passport\PersonalAccessToken;
+use Laravel\Passport\TokenRepository;
+use Laravel\Passport\Token;
+use Spatie\FlareClient\Api;
 
 class LoginController extends Controller
 {
@@ -33,7 +36,7 @@ class LoginController extends Controller
             return $this->respondSuccessWithDataAndMessage($token, 'token');
         }
         else{
-            return $this->respondUnAuthorizedWithMessage('Email or password incorrect');
+            return $this->respondErrorWithMessage('Email or password incorrect', ApiCode::INVALID_CREDENTIALS);
         }
     }
 
@@ -41,10 +44,10 @@ class LoginController extends Controller
     public function userDetails(): Response
     {
         $user = Auth::user();
-        if($user){
+        if(Auth::user()){
             return $this->respondSuccessWithDataAndMessage($user, 'data');
         }else{
-            return $this->respondNotFoundWithMessage('Record Not Found');
+            return $this->respondErrorWithMessage('Record Not Found', ApiCode::NOT_FOUND);
         }
     }
 
@@ -60,9 +63,9 @@ class LoginController extends Controller
                     'revoked' => true
                 ]);
             $accessToken->revoke();
-            return $this->respondSuccessWithMessage('Logout Successfully');
+            return $this->respondSuccessWithDataAndMessage(null, '','Logout Successfully');
         }else{
-            return $this->respondUnAuthorizedWithMessage('UnAuthorized');
+            return $this->respondErrorWithMessage('UnAuthorized', ApiCode::UNAUTHENTICATED_STATUS);
         }
     }
 

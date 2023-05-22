@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Auth;
 
+use App\ApiCode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\Admin;
@@ -28,7 +29,7 @@ class RegisterController extends Controller
     public function registerAdminOrAgency(RegisterRequest $request): Response
     {
         if($this->guard_scope != 'superadmin'){
-            return $this->respondUnAuthorizedWithMessage('UnAuthorized');
+            return $this->respondErrorWithMessage('UnAuthorized', ApiCode::UNAUTHENTICATED_STATUS);
         }
         $input = $request->all();
         if($input['user_type'] == 'admin'){
@@ -40,7 +41,7 @@ class RegisterController extends Controller
         }
 
         if ($get_details) {
-            return $this->respondWithError('User Already Exist');
+            return $this->respondErrorWithMessage('User Already Exist', ApiCode::ALREADY_EXIST);
         }
 
         $user->name = $input['name'];
@@ -49,10 +50,11 @@ class RegisterController extends Controller
         $user->save();
 
         if($user){
-            return $this->respondSuccessWithMessage('User Created Successfully.');
+            $res = $this->respondSuccessWithDataAndMessage(null, '','User Created Successfully.');
         }
         else{
-            return $this->respondUnAuthorizedWithMessage('User Not Created.');
+            $res = $this->respondErrorWithMessage('User Not Created.', ApiCode::BAD_REQUEST);
         }
+        return $res;
     }
 }

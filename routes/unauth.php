@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\ForgotPasswordController;
 use App\Http\Controllers\API\Auth\ResetPasswordController;
+use App\Http\Controllers\API\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +20,7 @@ use App\Http\Controllers\API\Auth\ResetPasswordController;
 Route::post('/login', [LoginController::class, 'loginUser']);
 Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('/password/reset', [ResetPasswordController::class, 'reset']);
+
+
+
+Route::post('/permissions', [PermissionController::class, 'store']);
