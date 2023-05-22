@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Superadmin\SuperadminController;
+use App\Http\Controllers\API\PermissionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,6 +29,8 @@ Route::get('/logout', [LoginController::class, 'logoutUser']);
 
 
 
+
+
 Route::middleware(['auth:superadmin-api'])->group(function () {
     /*
     |--------------------------------------------------------------------------
@@ -36,6 +39,8 @@ Route::middleware(['auth:superadmin-api'])->group(function () {
     |
     */
 
+
+//    Route::apiResource('agencies', SuperadminController::class);
 
     Route::get('/agencies', [SuperadminController::class, 'indexAgency'])->name('agency.index');
     Route::get('/agencies/{agency}', [SuperadminController::class, 'showAgency'])->name('agency.show');
@@ -55,6 +60,8 @@ Route::middleware(['auth:superadmin-api'])->group(function () {
     |--------------------------------------------------------------------------
     |
     */
+
+//    Route::apiResource('admins', SuperadminController::class);
 
     Route::get('/admins', [SuperadminController::class, 'indexAdmin'])->name('admins.index');
     Route::get('/admins/{admin}', [SuperadminController::class, 'showAdmin'])->name('admins.show');

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
+//use Illuminate\Support\Facades\Lang;
 
 class Controller extends BaseController
 {
@@ -14,83 +15,54 @@ class Controller extends BaseController
 
     public function getGuardResetterTable($params)
     {
+        $type = 'superadmins';
         if($params == 'agency'){
-            return 'agencies';
-        }elseif ($params == 'admin'){
-            return 'admins';
-        }elseif ($params == 'superadmin'){
-            return 'superadmins';
+            $type = 'agencies';
         }
+        if ($params == 'admin'){
+            $type = 'admins';
+        }
+        return $type;
     }
 
 
-    public function respondSuccessWithDataAndMessage($data, $array_parameter = null, $msg = null): Response
+    public function respondSuccessWithDataAndMessage($data = null, $array_parameter = null, $msg = null): Response
     {
         $success['success'] = ApiCode::SUCCESS_TRUE;
-        $success[$array_parameter] = $data;
+        if(!empty($data)){
+            $success[$array_parameter] = $data;
+        }else{
+            $success['message'] = $msg;
+        }
         return response($success, ApiCode::SUCCESS_STATUS);
     }
 
-    public function respondSuccessWithMessage($msg): Response
-    {
-        $success['success'] = ApiCode::SUCCESS_TRUE;
-        $success['message'] = $msg;
-        return response($success, ApiCode::SUCCESS_STATUS);
-    }
 
-    public function respondErrorWithMessage($msg): Response
+    public function respondErrorWithMessage($msg, $response_code): Response
     {
         $success['success'] = ApiCode::SUCCESS_FALSE;
         $success['message'] = $msg;
-        return response($success, ApiCode::SUCCESS_STATUS);
+        return response($success, $response_code);
     }
 
-    public function respondNotFoundWithMessage($msg): Response
-    {
-        $success['success'] = ApiCode::SUCCESS_FALSE;
-        $success['message'] = $msg;
-        return response($success, ApiCode::NOT_FOUND);
-    }
-
-    public function respondUnAuthorizedWithMessage($msg): Response
-    {
-        $success['success'] = ApiCode::SUCCESS_FALSE;
-        $success['message'] = $msg;
-        return response($success, ApiCode::UNAUTHENTICATED_STATUS);
-    }
-
-    public function respondWithError($msg): Response
-    {
-        $success['success'] = ApiCode::SUCCESS_FALSE;
-        $success['message'] = $msg;
-        return response($success, ApiCode::SUCCESS_STATUS);
-    }
 
     public function updateDataSuccessOrNot($response): Response
     {
         if($response){
-            return $this->respondSuccessWithMessage(ApiCode::DATA_UPDATED_SUCCESS);
+            return $this->respondSuccessWithDataAndMessage(null, '', trans('messages.update_success'));
         }else{
-            return $this->respondUnAuthorizedWithMessage(ApiCode::DATA_NOT_UPDATED);
+            return $this->respondErrorWithMessage(trans('messages.not_update'), ApiCode::DATA_NOT_UPDATED);
         }
     }
+
 
     public function deleteDataSuccessOrNot($response): Response
     {
         if($response){
-            return $this->respondSuccessWithMessage(ApiCode::DATA_DELETED_SUCCESS);
+            return $this->respondSuccessWithDataAndMessage(null, '', trans('messages.delete_success'));
         }else{
-            return $this->respondUnAuthorizedWithMessage(ApiCode::DATA_NOT_DELETE);
+            return $this->respondErrorWithMessage(trans('messages.not_delete'), ApiCode::DATA_NOT_UPDATED);
         }
     }
 
-
-
-//    public function respondBadRequest($api_code) {
-//        return $this->respondWithError($api_code, 400);
-//    }
-//
-//    public function respondNotFound($api_code) {
-//        return $this->respondWithError($api_code, 404);
-//    }
 }
